@@ -49,10 +49,6 @@ def matrix_multiply(A,B):
     rowsB = len(B)
     colsB = len(B[0])
 
-   # if colsA != rowsB:
-   #     print('Number of A columns must equal number of B rows.')
-     #   sys.exit()
-
     C = zeros_matrix(rowsA, colsB)
 
     for i in range(rowsA):
@@ -111,7 +107,7 @@ I = [[1, 0, 0, 0, 0],
      [0, 0, 0, 1, 0],
      [0, 0, 0, 0, 1]]
 
-print('Invert matrix of A:')
+'print('Invert matrix of A:')
 print(' ')
 print_matrix('matrix A', A)
 invert_matrix(A, I)

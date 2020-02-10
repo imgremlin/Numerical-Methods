@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import linalg as la
+
 def seidel(a, x ,b): 
     n = len(a)                    
     for j in range(0, n):         
@@ -8,7 +9,7 @@ def seidel(a, x ,b):
         for i in range(0, n):      
             if(j != i): 
                 d-=a[j][i] * x[i]        
-        x[j] = d / a[j][j]      
+        x[j] = d / a[j][j]
     return x     
                      
 x = [0, 0, 0,0,0]                         
@@ -19,12 +20,13 @@ a = [[6.81, 1.12, 0.95, 1.165, -0.51],
      [0.99, -0.48, -0.017, 1, 4]]
 b = [2.1,0.6,0.43,5.52,-0.75]
 
-error = np.dot(a, x) - b
-print(la.norm(error)) 
+error = np.dot(a, x) - b 
 
 while la.norm(error) > 0.0001:             
     x = seidel(a, x, b) 
     error = np.dot(a, x) - b
-    print('error = ', la.norm(error))   
-
-print(x)
+    print('x=', x)
+    print('error = ', error)
+    print('error norm = ', la.norm(error))   
+    print('')
+    
