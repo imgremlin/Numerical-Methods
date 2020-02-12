@@ -22,7 +22,7 @@ b = [2.1,0.6,0.43,5.52,-0.75]
 
 error = np.dot(a, x) - b 
 
-while la.norm(error) > 0.0001:             
+while la.norm(error) > 0.00001:             
     x = seidel(a, x, b) 
     error = np.dot(a, x) - b
     print('x=', x)

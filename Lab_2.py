@@ -9,7 +9,6 @@ def invert_matrix(A, I):
     IM = copy_matrix(I)
     indices = list(range(n)) 
     for fd in range(n): 
-       
         fdScaler = 1.0 / AM[fd][fd]
         for j in range(n): 
             AM[fd][j] *= fdScaler
@@ -21,7 +20,7 @@ def invert_matrix(A, I):
                 IM[i][j] = IM[i][j] - crScaler * IM[fd][j]
             r=np.array(AM).dot(IM)
             b = np.array(IM)
-            print_matrix('iter', IM)
+            print_matrix('iter', AM)
             print('nevyazka =', la.norm(r-b)) 
             print(' ')
                        
@@ -31,7 +30,8 @@ def invert_matrix(A, I):
 def print_matrix(Title, M):
     print(Title)
     for row in M:
-        print([round(x,5)+0 for x in row])
+        #print([round(x,5)+0 for x in row])
+       print(["{:e}".format(x) for x in row]) 
         
 def zeros_matrix(rows, cols):
     A = []
@@ -107,11 +107,11 @@ I = [[1, 0, 0, 0, 0],
      [0, 0, 0, 1, 0],
      [0, 0, 0, 0, 1]]
 
-'print('Invert matrix of A:')
+print('Invert matrix of A:')
 print(' ')
 print_matrix('matrix A', A)
-invert_matrix(A, I)
-print_matrix('A * A^(-1)', matrix_multiply(A,invert_matrix(A, I)))
+#invert_matrix(A, I)
+#print_matrix('A * A^(-1)', matrix_multiply(A,invert_matrix(A, I)))
 print(' ')
 print('detA = ', det(A))
 print(' ')
@@ -120,4 +120,4 @@ print(' ')
 print_matrix('Main matrix: ', A)  
 print(' ')
 print_matrix('right vector: ', B)   
-invert_matrix(A, B)
+print_matrix('final result: ', invert_matrix(A, B)) 
