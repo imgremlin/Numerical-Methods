@@ -1,92 +1,119 @@
-from numpy import linalg as la
 import math
+from numpy import linalg as la
 
 e = 0.001
-d = 0.691
-B = -0.789
-a = 0.312
-c = 1.975
-b = -0.283
-d = 0.281
+A = 0.455
+B = -0.288
+a = 0.498
+b = 1.488
+c = 0.352
+d = 0.796
 
-def x_k_1(y):
-     return d - math.sin(y+B)
-     
-def y_k_1(x):
-     return (c - math.cos(x+a))/b
-     
-def funk_2(x, y):
-    return x + math.sin(y+B) - d
+def xk_1(y):
+    return d-math.cos(y+B)
 
-def funk_1(x, y):
-    return math.cos(x+a) + b*y - c
+def yk_1(x):
+    return (-math.sin(x+A)+c)/b
 
-def simple_iterations(x_k, y_k):
-    dx = dy = 1
-    f1 = funk_1(x_k, y_k)
-    f2 = funk_2(x_k, y_k)
-    i=0
-     
-    while la.norm([f1, f2]) > e or la.norm([dx, dy]) > e:
-        i=i+1
-        y_k1 = y_k_1(x_k)
-        x_k1 = x_k_1(y_k)
-        print('x_k1 = ', x_k1, 'y_k1 = ', y_k1)
-        dx = x_k1 - x_k
-        dy = y_k1 - y_k
-        print('norm dx dy =', la.norm([dx, dy]))
-        f1 = funk_1(x_k1, y_k1)
-        f2 = funk_2(x_k1, y_k1)
-        x_k = x_k1
-        y_k = y_k1
-        print('norm f1 f2 =', la.norm([f1, f2]))  
-        print(i)
-        
-    print('res: x = ', round(x_k1, 4), 'y =', round(y_k1, 4))
-     
-#print(simple_iterations(-0.69, -3.7))
-#print(simple_iterations(1.2, -7))
-#print(simple_iterations(1, -6))
+def func1(x,y):
+    return math.sin(x+A)+b*y-c
+
+def func2(x,y):
+    return x+math.cos(y+B)-d
+
+def simple_iteration(xk, yk):
+    iter=1
+    f1=func1(xk, yk)
+    f2=func2(xk, yk)
+    print('iteration №', iter)
+    print("(x, y) = ({}, {})".format(xk, yk))
+    print("(f1, f2) = ({}, {})".format(f1, f2))
+    print("norm(f1,f2) = {}".format(la.norm([f1,f2])))
     
-def det(x, y):
-    return (2*y*(math.cos(x+y) + c) - 2*x*(math.cos(x+y)))
-    
-def funkn_1(x, y):
-    return (x*c + math.sin(y+x) - d)
-
-def funkn_2(x, y):
-    return (x*x + y*y - 1)
-
-def xn_k_1(x, y):
-    return (2*y*funkn_1(x, y) - (math.cos(x+y)) * funkn_2(x,y) )/det(x, y)
-
-def yn_k_1(x, y):
-    return (-2*x*funkn_1(x, y) + (math.cos(x+y) + c) * funkn_2(x,y) )/det(x, y)
-
-def newton(x_k, y_k):
-    dx = dy = 1
-    f1 = funkn_1(x_k, y_k)
-    f2 = funkn_2(x_k, y_k)
-    i=0
-     
-    while la.norm([f1, f2]) > e or la.norm([dx, dy]) > e:
-        i=i+1
-        y_k1 = yn_k_1(x_k, y_k)
-        x_k1 = xn_k_1(x_k, y_k)
-        print('x_k1 = ', x_k1, 'y_k1 = ', y_k1)
-        dx = x_k1 - x_k
-        dy = y_k1 - y_k
-        print('norm dx dy =', la.norm([dx, dy]))
-        f1 = funkn_1(x_k1, y_k1)
-        f2 = funkn_2(x_k1, y_k1)
-        x_k = x_k1
-        y_k = y_k1
-        print('norm f1 f2 =', la.norm([f1, f2]))  
-        print(i)
+    while True:
         
-    print('res: x = ', round(x_k1, 4), 'y =', round(y_k1, 4))
+        iter+=1
+        x1=xk_1(yk)
+        y1=yk_1(xk)
+        dx=x1-xk
+        dy=y1-yk
+        f1=func1(x1, y1)
+        f2=func2(x1, y1)
+        print()
+        print('iteration №', iter)
+        print("(x, y) = ({}, {})".format(xk, yk))
+        print("(f1, f2) = ({}, {})".format(f1, f2))
+        print("norm(f1,f2) = {}".format(la.norm([f1,f2])))
+        xk=x1
+        yk=y1
 
-#print(newton(-0.25, 0.967))
-#print(b, B)
+        if la.norm([f1,f2])<e and la.norm([dx,dy])<e:
+            print("result: (x, y) = ({}, {})".format(x1, y1))
+            break
+        
+def det(x,y):
+    return (2*b*y*y-2*a*x*x)/(math.cos(x*y+A)*math.cos(x*y+A))-4*b*x*y
 
+def fun1(x,y):
+    return math.tan(x*y+A)-x*x
 
+def fun2(x,y):
+    return a*x*x+b*y*y-1
+
+def xn_1(x,y):
+    return x-(2*b*y*fun1(x,y)-x*fun2(x,y)/(math.cos(x*y+A)*math.cos(x*y+A)))/det(x,y)       
+
+def yn_1(x,y):
+    return y-(-2*a*x*fun1(x,y)+(y/(math.cos(x*y+A)*math.cos(x*y+A))-2*x)*fun2(x,y))/det(x,y)
+
+def newton_method(xk,yk):
+    iter=1
+    f1=fun1(xk, yk)
+    f2=fun2(xk, yk)    
+    print()
+    print('iteration №', iter)
+    print("(x, y) = ({}, {})".format(xk, yk))
+    print("(f1, f2) = ({}, {})".format(f1, f2))
+    print("norm(f1,f2) = {}".format(la.norm([f1,f2])))
+    
+    while True:
+        iter+=1
+        x1=xn_1(xk,yk)
+        y1=yn_1(xk,yk)
+        dx=x1-xk
+        dy=y1-yk
+        f1=fun1(x1, y1)
+        f2=fun2(x1, y1)
+        print()
+        print('iteration №', iter)
+        print("(x, y) = ({}, {})".format(xk, yk))
+        print("(f1, f2) = ({}, {})".format(f1, f2))
+        print("norm(f1,f2) = {}".format(la.norm([f1,f2])))
+        xk=x1
+        yk=y1
+
+        if la.norm([f1,f2])<e and la.norm([dx,dy])<e:
+            print("result: (x, y) = ({}, {})".format(x1, y1))
+            break
+    
+    
+    
+print("simple iterations:")
+print()    
+simple_iteration(-0.17,0.05)
+print()    
+
+print("newton method n1:")         
+newton_method(-0.4,-0.78)
+print()    
+
+print("newton method n2:")  
+newton_method(-1.21,-0.42)
+print()    
+
+print("newton method n3:")  
+newton_method(0.38,-0.79)
+print()    
+
+print("newton method n4:")  
+newton_method(1.2,0.43)
